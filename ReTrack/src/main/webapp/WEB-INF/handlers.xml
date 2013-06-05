@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean name="MIMETypeHandler" class="com.gullapu.savtrac.handlers.MIMETypeHandler" scope="singleton">
+		<constructor-arg index="0" value="MIMETypeHandler" />
+		<constructor-arg index="1" value="Checks the supported MIME Types" />
+		<constructor-arg index="2">
+			<list>
+				<value>application/pdf</value>
+				<value>image/gif</value>
+				<value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value>
+				<value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</value>
+				<value>text/plain</value>
+			</list>
+		</constructor-arg >
+	</bean>
+	<bean name="DocumentHashingHandler" class="com.gullapu.savtrac.handlers.HashingHandler" scope="singleton">
+		<constructor-arg index="0" value="HashingHandler" />
+		<constructor-arg index="1" value="Generates hash for the document" />
+		<constructor-arg index="2" value="MD5" />
+	</bean>
+	<bean name="PasswordHashingHandler" class="com.gullapu.savtrac.handlers.PasswordHashingHandler" scope="singleton" >
+		<property name="encoder" ref="encoder" />
+	</bean>
+
+	<!--	
+	<bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+		-->
+	<bean id="encoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
+</beans>
