@@ -1,3 +1,5 @@
 /.settings
 /test.log
 /test.properties
+/target
+/DB

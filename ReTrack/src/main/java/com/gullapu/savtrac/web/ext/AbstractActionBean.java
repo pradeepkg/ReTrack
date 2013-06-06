@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.gullapu.savtrac.pojo.User;
 import com.gullapu.savtrac.services.db.PersistenceService;
+import com.gullapu.savtrac.services.processor.ProcessorService;
 import com.gullapu.savtrac.web.Constants;
 
 /**
@@ -30,6 +31,9 @@ public abstract class AbstractActionBean implements ActionBean {
 	
 	@SpringBean
 	protected PersistenceService persistenceService;
+	
+	@SpringBean
+	protected ProcessorService processorService;
 
 	/**
 	 * The handler for action bean context.

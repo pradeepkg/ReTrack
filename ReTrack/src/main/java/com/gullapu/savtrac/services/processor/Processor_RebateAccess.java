@@ -26,9 +26,9 @@ import com.gullapu.savtrac.pojo.Product;
  * 
  * @author Pradeep Kadambar
  */
-public class Processor_4myrebate extends Processor {
+public class Processor_RebateAccess extends Processor {
 
-	public Processor_4myrebate(String url) {
+	public Processor_RebateAccess(String url) {
 		super(url);
 	}
 
@@ -50,30 +50,28 @@ public class Processor_4myrebate extends Processor {
 
 			TagNode node = cleaner.clean(new InputStreamReader(conn.getInputStream()));
 			
-			Object[] infoNodes = node.evaluateXPath("//table[@id='rebateDetails']/tbody");
-			TagNode info_node = (TagNode) infoNodes[0];
-			Object[] infos = info_node.evaluateXPath("//tr");
-			for (Object object2 : infos) {
-				TagNode infoNode = (TagNode) object2;
-				Object[] detailNodes = infoNode.evaluateXPath("//td");
+			StringBuffer title = (StringBuffer) node.evaluateXPath("//div[@id='mainbody']/p[@class='title']/text()")[0];
+			entry.setName(title.toString());
+	
+			String[] tokens = entry.getName().split("-");
+			entry.setEndDate(getDate(tokens[tokens.length - 1]));
+			entry.setStartDate(getDate(tokens[tokens.length - 2]));
+			
+			
+			TagNode descriptionNode = (TagNode) node.evaluateXPath("//div[@id='mainbody']/p[2]")[0];
+			entry.setDescription(descriptionNode.getText().toString().trim());
 
-				if (detailNodes.length == 2) {
-					String tdTitle = ((TagNode) detailNodes[0]).getText().toString().trim();
-					String tdText = ((TagNode) detailNodes[1]).getText().toString().trim();
-					System.out.println('[' + tdTitle + " = " + tdText + ']');
-
-					if (tdTitle.indexOf("Details") > -1) {
-						entry.setDescription(tdText);
-					} else if (tdTitle.indexOf("Starts") > -1) {
-						entry.setStartDate(getDate(tdText));
-					} else if (tdTitle.indexOf("Expires") > -1) {
-						entry.setEndDate(getDate(tdText));
-					} else if (tdTitle.indexOf("Amount") > -1) {
-						entry.setRebateAmount(Double.parseDouble(tdText.substring(1)));
-					}
-					System.out.println("--------------------------------");
-				}
-			}
+			Product product = new Product();
+			Object[] productInfo = node.evaluateXPath("//div[@class='productlist']/table/tbody/tr[2]/td");
+			
+			String name = ((TagNode) productInfo[0]).getText().toString().trim();
+			String upc = ((TagNode)productInfo[1]).getText().toString().trim();
+			product.setName(name);
+			product.setUpc(upc);
+			
+			String rebateAmount = ((TagNode)productInfo[2]).getText().toString().trim();
+			entry.setRebateAmount(Double.parseDouble(rebateAmount.substring(1)));
+			entry.setProduct(product);
 		} catch (IOException | XPatherException e) {
 			e.printStackTrace();
 		}
@@ -82,10 +80,10 @@ public class Processor_4myrebate extends Processor {
 
 		return entry;
 	}
-
+	
 	private Date getDate(String dateString) {
 		try {
-			return new SimpleDateFormat("MM / dd / yyyy", Locale.ENGLISH).parse(dateString);
+			return new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dateString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -93,13 +91,17 @@ public class Processor_4myrebate extends Processor {
 	}
 
 	public static void main(String[] a) {
-		Processor_4myrebate pro = new Processor_4myrebate("http://www.4myrebate.com/?oc=TD-9827");
+		Processor_RebateAccess pro = new Processor_RebateAccess("http://newegg.rebateaccess.com/?p=48849");
 		Entry entry = pro.parseEntry();
 
+		System.out.println(">>  Name   : " + entry.getName());
 		System.out.println(">>  Desc   : " + entry.getDescription());
 		System.out.println(">>  Start  : " + entry.getStartDate());
 		System.out.println(">>  End    : " + entry.getEndDate());
 		System.out.println(">>  Rebate : " + entry.getRebateAmount());
+		
+		System.out.println(">>  Product Name : " + entry.getProduct().getName());
+		System.out.println(">>  Product UPC : " + entry.getProduct().getUpc());
 	}
 
 }

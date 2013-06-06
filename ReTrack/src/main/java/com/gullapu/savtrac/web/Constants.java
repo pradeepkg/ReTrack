@@ -30,6 +30,8 @@ public interface Constants {
 	String DOCUMENTS = "documents";
 	
 	String ENTRY = "entry";
+	
+	String PRODUCT = "product";
 
 	/**
 	 * The key for user id in the request header.
@@ -55,6 +57,8 @@ public interface Constants {
 	 * The redirect JSP for error handling.
 	 */
 	String JSP_ERROR = "/WEB-INF/jsps/error.jsp";
+	
+	String JSP_CREATE = "/WEB-INF/jsps/createForm.jsp";
 	
 	String JSP_CREATE_1 = "/WEB-INF/jsps/createForm_1.jsp";
 	

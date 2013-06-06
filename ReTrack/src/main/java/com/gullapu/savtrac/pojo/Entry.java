@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,6 +24,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springmodules.validation.bean.conf.loader.annotation.handler.NotBlank;
 
 /**
@@ -49,6 +52,7 @@ public class Entry implements Serializable {
 
 	private String name;
 
+	@Column(length = 1024)
 	private String description;
 
 	private Date startDate;
@@ -61,22 +65,22 @@ public class Entry implements Serializable {
 	
 	private boolean isComplete;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	private double rebateAmount;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "productID")
 	@NotBlank
 	@ForeignKey(name = "FK_ENTRY_TO_PRODUCT")
 	private Product product;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "processorID")
 	@NotBlank
 	@ForeignKey(name = "FK_ENTRY_TO_PROCESSOR")
 	private Processor processor;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	// @LazyCollection(LazyCollectionOption.EXTRA)
-	@JoinTable(name = "ENTRY_DOCS", joinColumns = { @JoinColumn(name = "entryID") },
-		inverseJoinColumns = { @JoinColumn(name = "documentID") })
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "ENTRY_DOCS", joinColumns = { @JoinColumn(name = "entryID") }, inverseJoinColumns = { @JoinColumn(name = "documentID") })
 	private List<Document> documents;
 
 	/**
@@ -262,6 +266,20 @@ public class Entry implements Serializable {
 	 */
 	public void setProcessor(Processor processor) {
 		this.processor = processor;
+	}
+
+	/**
+	 * @return the rebateAmount
+	 */
+	public double getRebateAmount() {
+		return rebateAmount;
+	}
+
+	/**
+	 * @param rebateAmount the rebateAmount to set
+	 */
+	public void setRebateAmount(double rebateAmount) {
+		this.rebateAmount = rebateAmount;
 	}
 
 	/**

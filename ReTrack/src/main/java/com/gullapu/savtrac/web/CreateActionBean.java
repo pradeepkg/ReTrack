@@ -154,6 +154,13 @@ public class CreateActionBean extends AbstractActionBean {
 
 		saveInSession(Constants.USER, user);
 
+		return new ForwardResolution(Constants.JSP_CREATE);
+	}
+	
+	public Resolution processForm() {
+		com.gullapu.savtrac.services.processor.Processor processor = processorService.getProcessor(entry.getRebateLink());
+		entry = processor.parseEntry();	
+		saveInSession(Constants.PRODUCT, entry.getProduct());		
 		return new ForwardResolution(Constants.JSP_CREATE_1);
 	}
 
@@ -186,6 +193,7 @@ public class CreateActionBean extends AbstractActionBean {
 			entry.setUser(user);
 
 			entry = persistenceService.saveEntry(entry);
+			entry.setProduct((Product)getFromSession(Constants.PRODUCT));
 			LOGGER.debug("Entry saved - Exiting - " + entry);
 			return new ForwardResolution(Constants.JSP_CREATE_2).addParameter("entryID", entry.getId());
 		} catch (IOException e) {

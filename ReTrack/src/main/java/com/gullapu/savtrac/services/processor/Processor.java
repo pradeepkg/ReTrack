@@ -4,7 +4,6 @@
 package com.gullapu.savtrac.services.processor;
 
 import com.gullapu.savtrac.pojo.Entry;
-import com.gullapu.savtrac.services.docs.Document;
 
 /**
  * <p>
@@ -12,7 +11,31 @@ import com.gullapu.savtrac.services.docs.Document;
  * 
  * @author Pradeep Kadambar
  */
-public interface Processor {
+public abstract class Processor {
 
-	Entry processDocument(Document document);
+	private String url;
+	
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * @param url
+	 */
+	public Processor(String url) {
+		super();
+		this.url = url;
+	}
+
+	public abstract Entry parseEntry();
 }

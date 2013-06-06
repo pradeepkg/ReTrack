@@ -47,9 +47,9 @@ public class DBServiceImpl implements PersistenceService {
 
 	public User getUser(final String key) {
 		final Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		//session.beginTransaction();
 		User user = (User) session.get(User.class, key);
-		session.getTransaction().commit();
+		//session.getTransaction().commit();
 		session.close();
 		if (null == user) {
 			user = new User();
@@ -70,9 +70,9 @@ public class DBServiceImpl implements PersistenceService {
 
 	public Document getDocument(final int documentID) {
 		final Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		//session.beginTransaction();
 		Document document = (Document) session.get(Document.class, documentID);
-		session.getTransaction().commit();
+		//session.getTransaction().commit();
 		session.close();
 		if (null == document) {
 			document = new Document();
@@ -124,14 +124,12 @@ public class DBServiceImpl implements PersistenceService {
 	@Override
 	public List<Entry> getEntries(String userID) {
 		final Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		String hql = "FROM Entry E WHERE E.user.userID=:userID";
-		
+		//session.beginTransaction();
+		String hql = "FROM Entry E WHERE E.user.userID=:userID";		
 		Query query = session.createQuery(hql);
 		query.setParameter("userID", userID);
-		List<Entry> results = query.list();
-		
-		session.getTransaction().commit();
+		List<Entry> results = query.list();		
+		//session.getTransaction().commit();
 		session.close();
 		return results;
 	}
@@ -139,14 +137,9 @@ public class DBServiceImpl implements PersistenceService {
 	@Override
 	public Entry getEntry(int entryID) {
 		final Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		String hql = "FROM Entry E WHERE E.entryID=:entryID";
-		
-		Query query = session.createQuery(hql);
-		query.setParameter("entryID", entryID);
-		Entry entry = (Entry) query.uniqueResult();
-		
-		session.getTransaction().commit();
+		//session.beginTransaction();
+		Entry entry = (Entry)session.get(Entry.class, entryID);
+		//session.getTransaction().commit();
 		session.close();
 		return entry;
 	}
@@ -155,13 +148,11 @@ public class DBServiceImpl implements PersistenceService {
 	@Override
 	public List<Processor> getProcessors() {
 		final Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		String hql = "FROM Processor ";
-		
+		//session.beginTransaction();
+		String hql = "FROM Processor ";		
 		Query query = session.createQuery(hql);
-		List<Processor> results = query.list();
-		
-		session.getTransaction().commit();
+		List<Processor> results = query.list();		
+		//session.getTransaction().commit();
 		session.close();
 		return results;
 	}
@@ -169,14 +160,9 @@ public class DBServiceImpl implements PersistenceService {
 	@Override
 	public Processor getProcessor(int processorID) {
 		final Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		String hql = "FROM Processor P WHERE P.processorID=:processorID";
-		
-		Query query = session.createQuery(hql);
-		query.setParameter("processorID", processorID);
-		Processor processor = (Processor) query.uniqueResult();
-		
-		session.getTransaction().commit();
+		//session.beginTransaction();		
+		Processor processor = (Processor) session.get(Processor.class, processorID);		
+		//session.getTransaction().commit();
 		session.close();
 		return processor;
 	}

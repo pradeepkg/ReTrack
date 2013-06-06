@@ -15,9 +15,7 @@
 				varStatus="loop">
 				<tr>
 					<td>${entry.id}</td>
-					<td>
-						<c:if test="true">ssssssssssssssssss</c:if>
-						
+					<td>					
 							<stripes:link beanclass="com.gullapu.savtrac.web.EditActionBean"
 								event="completeEntry">
 								<stripes:param name="entryID">${entry.id}</stripes:param>

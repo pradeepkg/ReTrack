@@ -15,6 +15,9 @@
 
 	<bean id="docService" class="com.gullapu.savtrac.services.docs.DocumentServiceImpl"
 		scope="singleton" lazy-init="false" />
+		
+	<bean id="processorService" class="com.gullapu.savtrac.services.processor.ProcessorService"
+		scope="singleton" lazy-init="false" />
 
 	<bean id="webServiceConnection" class="com.gullapu.savtrac.ws.ConnectionImpl"
 		scope="singleton" lazy-init="false">
