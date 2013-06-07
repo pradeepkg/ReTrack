@@ -15,14 +15,25 @@
 				varStatus="loop">
 				<tr>
 					<td>${entry.id}</td>
-					<td>					
-							<stripes:link beanclass="com.gullapu.savtrac.web.EditActionBean"
-								event="completeEntry">
-								<stripes:param name="entryID">${entry.id}</stripes:param>
-	                            <img src="resources/emoticon_angry.png" alt="Incomplete Entry" 
-	                            	title="Incomplete Entry"/>
-	                        </stripes:link>	
-						
+					<td>	
+						<c:choose>
+							<c:when test="${entry.status == 'VALID'}">
+								<img src="resources/hand_thumbsup.png" alt="Entry Complete" 
+	                            	title="Entry Complete"/>
+							</c:when>
+							<c:when test="${entry.status == 'VOID'}">
+								<img src="resources/delete.png" alt="Void Entry" 
+	                            	title="Void Entry"/>
+							</c:when>							
+							<c:otherwise>
+								<stripes:link beanclass="com.gullapu.savtrac.web.EditActionBean"
+									event="completeEntry">
+									<stripes:param name="entryID">${entry.id}</stripes:param>
+		                            <img src="resources/emoticon_angry.png" alt="Incomplete Entry" 
+		                            	title="Incomplete Entry"/>
+		                        </stripes:link>	
+							</c:otherwise>
+						</c:choose>&nbsp;
 						${entry.name}
 					</td>
 					<td>${entry.description}</td>
@@ -32,19 +43,19 @@
 							<stripes:param name="entryID">${entry.id}</stripes:param>
                             <img src="resources/screwdriver.png" alt="Edit" title="Edit"/>
                         </stripes:link>						
-					<c:choose>
-						<c:when test="${empty entry.documents}">
-							.</td>
-						</c:when>
-						<c:otherwise>
-							<stripes:link beanclass="com.gullapu.savtrac.web.GetDocumentsActionBean"
-								event="getDocumentsForEntry">
-								<stripes:param name="entryID">${entry.id}</stripes:param>
-	                            <img src="resources/clip.png" alt="View Attachments" title="View Attachments"/>
-	                        </stripes:link>										
-							</td>
-						</c:otherwise>
-					</c:choose>
+						<c:choose>
+							<c:when test="${empty entry.documents}">
+								.
+							</c:when>
+							<c:otherwise>
+								<stripes:link beanclass="com.gullapu.savtrac.web.GetDocumentsActionBean"
+									event="getDocumentsForEntry">
+									<stripes:param name="entryID">${entry.id}</stripes:param>
+		                            <img src="resources/clip.png" alt="View Attachments" title="View Attachments"/>
+		                        </stripes:link>										
+							</c:otherwise>
+						</c:choose>
+					</td>					
 				</tr>
 			</c:forEach>
 		</table>

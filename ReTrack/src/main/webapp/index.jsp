@@ -9,33 +9,22 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-					<table align="left">
+					<table align="left" border="0">
 						<tr>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<td colspan="2">
+							<td colspan="2" align="center">
 								<stripes:link beanclass="com.gullapu.savtrac.web.CreateActionBean" event="showForm">
-									<img src="resources/notepad.png" />
+									<img src="resources/notepad.png" title="Create a new report" />
 								</stripes:link>	
-								&nbsp;&nbsp;
 								<stripes:link beanclass="com.gullapu.savtrac.web.CreateActionBean" event="showForm">
-									Create a new report
+									<h2>Create</h2>
 								</stripes:link>		
 							</td>
-						</tr>
-						<tr>
-							<td>&nbsp;</td>
-						</tr>
-						
-						<tr>
-							<td colspan="2">
+							<td colspan="2" align="center">
 								<stripes:link beanclass="com.gullapu.savtrac.web.GetEntriesActionBean" event="getEntries">
-									<img src="resources/binoculars.png" />
-								</stripes:link>	
-								&nbsp;&nbsp;
-								<stripes:link beanclass="com.gullapu.savtrac.web.GetEntriesActionBean" event="getEntries">
-									View all entries
+									<img src="resources/binoculars.png" title="View all entries"/>
+								</stripes:link>
+								<stripes:link beanclass="com.gullapu.savtrac.web.GetEntriesActionBean" event="getEntries" >
+									<h2>View All</h2>
 								</stripes:link>						
 							</td>
 						</tr>

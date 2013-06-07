@@ -28,12 +28,13 @@ import com.gullapu.savtrac.pojo.Product;
  */
 public class Processor_RebateAccess extends Processor {
 
-	public Processor_RebateAccess(String url) {
-		super(url);
+	public Processor_RebateAccess(String name, String urlPattern) {
+		super(name, urlPattern);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public Entry parseEntry() {
+	public Entry parseEntry(String urlString) {
 		Entry entry = new Entry();
 
 		try {
@@ -45,7 +46,7 @@ public class Processor_RebateAccess extends Processor {
 			props.setOmitComments(true);
 
 			// open a connection to the desired URL
-			URL url = new URL(getUrl());
+			URL url = new URL(urlString);
 			URLConnection conn = url.openConnection();
 
 			TagNode node = cleaner.clean(new InputStreamReader(conn.getInputStream()));
@@ -91,8 +92,8 @@ public class Processor_RebateAccess extends Processor {
 	}
 
 	public static void main(String[] a) {
-		Processor_RebateAccess pro = new Processor_RebateAccess("http://newegg.rebateaccess.com/?p=48849");
-		Entry entry = pro.parseEntry();
+		Processor_RebateAccess pro = new Processor_RebateAccess("RebateAccess", "^https?://([\\w\\d]+\\.)?rebateaccess\\.com$");
+		Entry entry = pro.parseEntry("http://newegg.rebateaccess.com/?p=48849");
 
 		System.out.println(">>  Name   : " + entry.getName());
 		System.out.println(">>  Desc   : " + entry.getDescription());

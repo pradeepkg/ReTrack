@@ -15,9 +15,6 @@
 
 	<bean id="docService" class="com.gullapu.savtrac.services.docs.DocumentServiceImpl"
 		scope="singleton" lazy-init="false" />
-		
-	<bean id="processorService" class="com.gullapu.savtrac.services.processor.ProcessorService"
-		scope="singleton" lazy-init="false" />
 
 	<bean id="webServiceConnection" class="com.gullapu.savtrac.ws.ConnectionImpl"
 		scope="singleton" lazy-init="false">
@@ -25,6 +22,28 @@
 		<property name="serviceURL"
 			value="http://localhost:5555/sts_db_service/rest/db/ws/" />
 	</bean>
+
+	<bean id="processorService" class="com.gullapu.savtrac.services.processor.ProcessorService"
+		scope="singleton" lazy-init="false" >
+		<constructor-arg index="0" >
+			<list>
+				<ref bean="Processor_RebateAccess" />
+				<ref bean="Processor_4myrebate" />				
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean name="Processor_RebateAccess" class="com.gullapu.savtrac.services.processor.Processor_RebateAccess"
+		scope="singleton">
+		<constructor-arg index="0" value="Rebate Access" />
+		<constructor-arg index="1" value="newegg.rebateaccess.com" />
+	</bean>
+	
+	<bean name="Processor_4myrebate" class="com.gullapu.savtrac.services.processor.Processor_4myrebate"
+		scope="singleton">
+		<constructor-arg index="0" value="4myrebate" />
+		<constructor-arg index="1" value="4myrebate.com" />
+	</bean>	
 
 	<!-- ===================================== -->
 	<!-- Spring configuration for REST support -->

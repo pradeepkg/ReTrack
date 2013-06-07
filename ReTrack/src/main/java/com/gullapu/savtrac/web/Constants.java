@@ -11,6 +11,12 @@ package com.gullapu.savtrac.web;
  * @author Pradeep Kadambar
  */
 public interface Constants {
+	
+	public interface Status {
+		String VALID = "VALID";
+		String VOID = "VOID";
+		String INCOMPLETE = "INCOMPLETE";
+	}
 
 	/**
 	 * The key for requester/target URL
@@ -70,7 +76,7 @@ public interface Constants {
 	
 	String JSP_EDIT_PRODUCT = "/WEB-INF/jsps/editProduct.jsp";
 	
-	String JSP_EDIT_PROCESSOR = "/WEB-INF/jsps/editEntry.jsp";
+	String JSP_EDIT_PROCESSOR = "/WEB-INF/jsps/editProcessor.jsp";
 	
 	String JSP_LIST = "/WEB-INF/jsps/getEntries.jsp";
 

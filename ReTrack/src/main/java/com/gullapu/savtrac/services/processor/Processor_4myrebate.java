@@ -18,7 +18,6 @@ import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
 
 import com.gullapu.savtrac.pojo.Entry;
-import com.gullapu.savtrac.pojo.Product;
 
 /**
  * <p>
@@ -28,12 +27,12 @@ import com.gullapu.savtrac.pojo.Product;
  */
 public class Processor_4myrebate extends Processor {
 
-	public Processor_4myrebate(String url) {
-		super(url);
+	public Processor_4myrebate(String name, String urlPattern) {
+		super(name, urlPattern);
 	}
 
 	@Override
-	public Entry parseEntry() {
+	public Entry parseEntry(String urlString) {
 		Entry entry = new Entry();
 
 		try {
@@ -45,7 +44,7 @@ public class Processor_4myrebate extends Processor {
 			props.setOmitComments(true);
 
 			// open a connection to the desired URL
-			URL url = new URL(getUrl());
+			URL url = new URL(urlString);
 			URLConnection conn = url.openConnection();
 
 			TagNode node = cleaner.clean(new InputStreamReader(conn.getInputStream()));
@@ -93,8 +92,8 @@ public class Processor_4myrebate extends Processor {
 	}
 
 	public static void main(String[] a) {
-		Processor_4myrebate pro = new Processor_4myrebate("http://www.4myrebate.com/?oc=TD-9827");
-		Entry entry = pro.parseEntry();
+		Processor_4myrebate pro = new Processor_4myrebate("", "");
+		Entry entry = pro.parseEntry("http://www.4myrebate.com/?oc=TD-9827");
 
 		System.out.println(">>  Desc   : " + entry.getDescription());
 		System.out.println(">>  Start  : " + entry.getStartDate());

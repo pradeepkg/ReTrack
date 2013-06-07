@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.ForeignKey;
 import org.springmodules.validation.bean.conf.loader.annotation.handler.NotBlank;
 
+import com.gullapu.savtrac.web.Constants.Status;
+
 /**
  * <p>
  * </p>
@@ -36,19 +38,19 @@ public class Processor implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@XmlElement
 	private int id;
-	
+
 	@XmlElement
 	private String name;
-	
+
 	@XmlElement
 	private String homePage;
-	
+
 	@XmlElement
 	private String email;
-	
+
 	@XmlElement
 	private String phone;
-	
+
 	@XmlElement
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "addressID")
@@ -56,8 +58,8 @@ public class Processor implements Serializable {
 	@ForeignKey(name = "FK_PROCESSOR_TO_ADDRESS")
 	private Address address;
 
-	private boolean isComplete;
-	
+	private String status = Status.INCOMPLETE;
+
 	/**
 	 * @return the id
 	 */
@@ -66,7 +68,8 @@ public class Processor implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -80,7 +83,8 @@ public class Processor implements Serializable {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -94,7 +98,8 @@ public class Processor implements Serializable {
 	}
 
 	/**
-	 * @param homePage the homePage to set
+	 * @param homePage
+	 *            the homePage to set
 	 */
 	public void setHomePage(String homePage) {
 		this.homePage = homePage;
@@ -108,7 +113,8 @@ public class Processor implements Serializable {
 	}
 
 	/**
-	 * @param email the email to set
+	 * @param email
+	 *            the email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -122,7 +128,8 @@ public class Processor implements Serializable {
 	}
 
 	/**
-	 * @param phone the phone to set
+	 * @param phone
+	 *            the phone to set
 	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
@@ -136,23 +143,42 @@ public class Processor implements Serializable {
 	}
 
 	/**
-	 * @param address the address to set
+	 * @param address
+	 *            the address to set
 	 */
 	public void setAddress(Address address) {
 		this.address = address;
 	}
 
 	/**
-	 * @return the isComplete
+	 * @return the status
 	 */
-	public boolean isComplete() {
-		return isComplete;
+	public String getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param isComplete the isComplete to set
+	 * @param status
+	 *            the status to set
 	 */
-	public void setComplete(boolean isComplete) {
-		this.isComplete = isComplete;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void analyzeCompletness() {
+		if(Status.VOID.equals(status)){
+			return;
+		}
+		
+		status = Status.INCOMPLETE;
+		
+		if (null == name || name.length() < 1) {
+			return;
+		} else if (null == address) {
+			return;
+		}
+
+		address.analyzeCompletness();
+		status = address.getStatus();
 	}
 }

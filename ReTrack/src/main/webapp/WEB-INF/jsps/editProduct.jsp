@@ -5,7 +5,7 @@
 	objects="${pageContext.request.parameterMap}">
 	<stripes:layout-component name="contents">
 		<stripes:form
-			beanclass="com.gullapu.savtrac.web.CreateActionBean"
+			beanclass="com.gullapu.savtrac.web.EditActionBean"
 			focus="entry.product.name">
 			<stripes:hidden name="entryID" />
 			<table border="1" cellspacing="0" align="center" width="100%">
@@ -32,7 +32,7 @@
 				</tr>							
 				<tr>
 					<td align="left" colspan="2">&nbsp;&nbsp;<stripes:submit
-							class="submit_btn" name="processForm_2" value="Continue ..." />
+							class="submit_btn" name="editProduct" value="Continue ..." />
 					</td>
 				</tr>
 			</table>

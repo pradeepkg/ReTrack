@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.gullapu.savtrac.web.Constants.Status;
+
 /**
  * <p>
  * </p>
@@ -30,17 +32,17 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@XmlElement
 	private int id;
-	
+
 	@XmlElement
 	private String name;
-	
+
 	@XmlElement
 	private String upc;
-	
+
 	@XmlElement
 	private double price;
-	
-	private boolean isComplete;
+
+	private String status = Status.INCOMPLETE;
 
 	/**
 	 * @return the id
@@ -50,7 +52,8 @@ public class Product implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -64,7 +67,8 @@ public class Product implements Serializable {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -78,7 +82,8 @@ public class Product implements Serializable {
 	}
 
 	/**
-	 * @param upc the upc to set
+	 * @param upc
+	 *            the upc to set
 	 */
 	public void setUpc(String upc) {
 		this.upc = upc;
@@ -92,29 +97,37 @@ public class Product implements Serializable {
 	}
 
 	/**
-	 * @param price the price to set
+	 * @param price
+	 *            the price to set
 	 */
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
 	/**
-	 * @return the isComplete
+	 * @return the status
 	 */
-	public boolean isComplete() {
-		return isComplete;
+	public String getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param isComplete the isComplete to set
+	 * @param status
+	 *            the status to set
 	 */
-	public void setComplete(boolean isComplete) {
-		this.isComplete = isComplete;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	
-	public void analyzeCompletness(){
-		if(null != name && name.length() > 0){
-			isComplete = true;
+
+	public void analyzeCompletness() {
+		if(Status.VOID.equals(status)){
+			return;
+		}
+		
+		status = Status.INCOMPLETE;
+		
+		if (null != name && name.length() > 0) {
+			status = Status.VALID;
 		}
 	}
 }

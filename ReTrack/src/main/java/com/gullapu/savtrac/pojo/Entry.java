@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springmodules.validation.bean.conf.loader.annotation.handler.NotBlank;
+
+import com.gullapu.savtrac.web.Constants.Status;
 
 /**
  * <p>
@@ -62,25 +62,27 @@ public class Entry implements Serializable {
 	private String productLink;
 
 	private String rebateLink;
-	
-	private boolean isComplete;
-	
+
+	@Column(name = "status")
+	private String status = Status.INCOMPLETE;
+
 	private double rebateAmount;
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "productID")
 	@NotBlank
 	@ForeignKey(name = "FK_ENTRY_TO_PRODUCT")
 	private Product product;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "processorID")
 	@NotBlank
 	@ForeignKey(name = "FK_ENTRY_TO_PROCESSOR")
 	private Processor processor;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "ENTRY_DOCS", joinColumns = { @JoinColumn(name = "entryID") }, inverseJoinColumns = { @JoinColumn(name = "documentID") })
+	@JoinTable(name = "ENTRY_DOCS", joinColumns = { @JoinColumn(name = "entryID") },
+		inverseJoinColumns = { @JoinColumn(name = "documentID") })
 	private List<Document> documents;
 
 	/**
@@ -196,17 +198,19 @@ public class Entry implements Serializable {
 	}
 
 	/**
-	 * @return the isComplete
+	 * @return the status
 	 */
-	public boolean isComplete() {
-		return isComplete;
+	@XmlElement
+	public String getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param isComplete the isComplete to set
+	 * @param status
+	 *            the status to set
 	 */
-	public void setComplete(boolean isComplete) {
-		this.isComplete = isComplete;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**
@@ -228,6 +232,7 @@ public class Entry implements Serializable {
 	/**
 	 * @return the user
 	 */
+	@XmlElement
 	public User getUser() {
 		return user;
 	}
@@ -243,12 +248,14 @@ public class Entry implements Serializable {
 	/**
 	 * @return the product
 	 */
+	@XmlElement
 	public Product getProduct() {
 		return product;
 	}
 
 	/**
-	 * @param product the product to set
+	 * @param product
+	 *            the product to set
 	 */
 	public void setProduct(Product product) {
 		this.product = product;
@@ -257,12 +264,14 @@ public class Entry implements Serializable {
 	/**
 	 * @return the processor
 	 */
+	@XmlElement
 	public Processor getProcessor() {
 		return processor;
 	}
 
 	/**
-	 * @param processor the processor to set
+	 * @param processor
+	 *            the processor to set
 	 */
 	public void setProcessor(Processor processor) {
 		this.processor = processor;
@@ -271,12 +280,14 @@ public class Entry implements Serializable {
 	/**
 	 * @return the rebateAmount
 	 */
+	@XmlElement
 	public double getRebateAmount() {
 		return rebateAmount;
 	}
 
 	/**
-	 * @param rebateAmount the rebateAmount to set
+	 * @param rebateAmount
+	 *            the rebateAmount to set
 	 */
 	public void setRebateAmount(double rebateAmount) {
 		this.rebateAmount = rebateAmount;
@@ -290,5 +301,34 @@ public class Entry implements Serializable {
 		return "Entry [id=" + id + ", user=" + user + ", name=" + name + ", description=" + description
 			+ ", startDate=" + startDate + ", endDate=" + endDate + ", productLink=" + productLink + ", rebateLink="
 			+ rebateLink + ", documents=" + documents + "]";
+	}
+
+	public void analyzeCompletness() {
+		if(Status.VOID.equals(status)){
+			return;
+		}
+		
+		status = Status.INCOMPLETE;
+		
+		if (null == name || name.length() < 1) {
+			return;
+		} else if (null == description || description.length() < 1) {
+			return;
+		} else if (null == rebateLink || rebateLink.length() < 1) {
+			return;
+		} else if (null == startDate || null == endDate) {
+			return;
+		} else if (null == processor) {
+			return;
+		} else if (null == product) {
+			return;
+		}
+
+		processor.analyzeCompletness();
+		product.analyzeCompletness();
+
+		if (Status.VALID.equals(processor.getStatus()) && Status.VALID.equals(product.getStatus())) {
+			status = Status.VALID;
+		}
 	}
 }
