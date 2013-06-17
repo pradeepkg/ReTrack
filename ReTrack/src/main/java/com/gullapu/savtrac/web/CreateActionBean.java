@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.HandlesEvent;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
 
@@ -22,6 +24,7 @@ import com.gullapu.savtrac.pojo.Entry;
 import com.gullapu.savtrac.pojo.Processor;
 import com.gullapu.savtrac.pojo.Product;
 import com.gullapu.savtrac.pojo.User;
+import com.gullapu.savtrac.web.Constants.Status;
 import com.gullapu.savtrac.web.ext.AbstractActionBean;
 
 /**
@@ -35,6 +38,9 @@ public class CreateActionBean extends AbstractActionBean {
 
 	private static final Logger LOGGER = Logger.getLogger(CreateActionBean.class);
 
+//	@ValidateNestedProperties({ @Validate(field = "name", required = true, minlength = 5, maxlength = 50),
+//		@Validate(field = "description", required = true, minlength = 5, maxlength = 1024),
+//		@Validate(field = "rebateAmount", required = true) })
 	private Entry entry;
 
 	private FileBean[] attachments = new FileBean[5];
@@ -138,6 +144,7 @@ public class CreateActionBean extends AbstractActionBean {
 	}
 
 	@DefaultHandler
+	@DontValidate
 	public Resolution showForm() {
 		LOGGER.debug("Forward request to showForm_1 page - Exiting");
 		User user = persistenceService.getUser("pgkadam");
@@ -156,14 +163,15 @@ public class CreateActionBean extends AbstractActionBean {
 
 		return new ForwardResolution(Constants.JSP_CREATE);
 	}
-	
-	public Resolution processForm() {		
+
+	public Resolution processForm() {
 		entry = processorService.parseURL(entry.getRebateLink());
-		saveInSession(Constants.PRODUCT, entry.getProduct());		
-		return new ForwardResolution(Constants.JSP_CREATE_1);
+		saveInSession(Constants.PRODUCT, entry.getProduct());
+		return new ForwardResolution(Constants.JSP_CREATE_ENTRY);
 	}
 
-	public Resolution processForm_1() {
+	@HandlesEvent("createEntry")
+	public Resolution createEntry() {
 		try {
 			LOGGER.debug("Entry name = " + entry.getName());
 			LOGGER.debug("Entry description = " + entry.getDescription());
@@ -190,12 +198,12 @@ public class CreateActionBean extends AbstractActionBean {
 
 			User user = getUser();
 			entry.setUser(user);
-			entry.analyzeCompletness();
+			entry.changeStatus(Status.VALID);
 
 			entry = persistenceService.saveEntry(entry);
-			entry.setProduct((Product)getFromSession(Constants.PRODUCT));
+			entry.setProduct((Product) getFromSession(Constants.PRODUCT));
 			LOGGER.debug("Entry saved - Exiting - " + entry);
-			return new ForwardResolution(Constants.JSP_CREATE_2).addParameter("entryID", entry.getId());
+			return new ForwardResolution(Constants.JSP_CREATE_PRODUCT).addParameter("entryID", entry.getId());
 		} catch (IOException e) {
 			LOGGER.error("Failed to save entry", e);
 		}
@@ -203,24 +211,26 @@ public class CreateActionBean extends AbstractActionBean {
 		return new ForwardResolution(Constants.JSP_ERROR);
 	}
 
-	public Resolution processForm_2() {
+	@HandlesEvent("createProduct")
+	public Resolution createProduct() {
 		LOGGER.debug("Forward request to showForm_2 page - Exiting");
 		Entry dbEntry = persistenceService.getEntry(entryID);
 
 		Product product = entry.getProduct();
 		entry = dbEntry;
 		entry.setProduct(product);
-		entry.analyzeCompletness();
-		
+		entry.changeStatus(Status.VALID);
+
 		Entry response = persistenceService.saveEntry(entry);
 		LOGGER.debug("Entry saved - Exiting - " + response);
 
 		processors = persistenceService.getProcessors();
 
-		return new ForwardResolution(Constants.JSP_CREATE_3).addParameter("entryID", entry.getId());
+		return new ForwardResolution(Constants.JSP_CREATE_PROCESSOR).addParameter("entryID", entry.getId());
 	}
 
-	public Resolution processForm_3() {
+	@HandlesEvent("createProcessor")
+	public Resolution createProcessor() {
 		LOGGER.debug("Forward request to showForm_3 page - Exiting");
 		Entry dbEntry = persistenceService.getEntry(entryID);
 
@@ -234,8 +244,8 @@ public class CreateActionBean extends AbstractActionBean {
 
 		entry = dbEntry;
 		entry.setProcessor(processor);
-		entry.analyzeCompletness();
-		
+		entry.changeStatus(Status.VALID);
+
 		Entry response = persistenceService.saveEntry(entry);
 		LOGGER.debug("Entry saved - Exiting - " + response);
 

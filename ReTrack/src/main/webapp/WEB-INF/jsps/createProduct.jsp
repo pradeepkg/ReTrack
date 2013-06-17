@@ -32,7 +32,7 @@
 				</tr>							
 				<tr>
 					<td align="left" colspan="2">&nbsp;&nbsp;<stripes:submit
-							class="submit_btn" name="processForm_2" value="Continue ..." />
+							class="submit_btn" name="createProduct" value="Continue ..." />
 					</td>
 				</tr>
 			</table>

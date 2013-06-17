@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,6 +27,9 @@ import com.gullapu.savtrac.web.Constants.Status;
 @Entity
 @Table(name = "Addresses")
 public class Address implements Serializable {
+
+	@Transient
+	private static final long serialVersionUID = -5630299378758221593L;
 
 	@Id
 	@Column(name = "addressID")
@@ -51,6 +55,7 @@ public class Address implements Serializable {
 	@XmlElement
 	private String zipCode;
 
+	@XmlElement
 	private String status = Status.INCOMPLETE;
 
 	/**
@@ -162,8 +167,6 @@ public class Address implements Serializable {
 		if(Status.VOID.equals(status)){
 			return;
 		}
-		
-		status = Status.INCOMPLETE;
 		
 		if (null == line1 || line1.length() < 1) {
 			return;

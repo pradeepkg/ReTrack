@@ -30,13 +30,15 @@ http://www.springframework.org/schema/jdbc http://www.springframework.org/schema
 		<property name="dataSource" ref="dataSource"/>
 		<property name="annotatedClasses">
 			<list>
+				<value>java.lang.Class</value>
+							
 				<value>com.gullapu.savtrac.pojo.User</value>
 				<value>com.gullapu.savtrac.pojo.Document</value>
 				<value>com.gullapu.savtrac.pojo.Role</value>
 				<value>com.gullapu.savtrac.pojo.Entry</value>
 				<value>com.gullapu.savtrac.pojo.Product</value>	
 				<value>com.gullapu.savtrac.pojo.Processor</value>		
-				<value>com.gullapu.savtrac.pojo.Address</value>																
+				<value>com.gullapu.savtrac.pojo.Address</value>																																											
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -44,7 +46,7 @@ http://www.springframework.org/schema/jdbc http://www.springframework.org/schema
 				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
 				<!-- 
 				<prop key="hibernate.hbm2ddl.auto">create</prop>
-			 	-->
+			 	 -->
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="format_sql">true</prop>
 				<prop key="hibernate.connection.shutdown">true</prop>

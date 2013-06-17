@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -38,6 +39,9 @@ import com.gullapu.savtrac.web.Constants.Status;
 @Entity
 @Table(name = "Entries")
 public class Entry implements Serializable {
+
+	@Transient
+	private static final long serialVersionUID = 1224279787048322786L;
 
 	@Id
 	@Column(name = "entryID")
@@ -59,11 +63,21 @@ public class Entry implements Serializable {
 
 	private Date endDate;
 
+	private Date createDate;
+
+	private Date mailedDate;
+
+	private Date processingDate;
+
+	private Date approvedDate;
+
+	private Date receiveDate;
+
 	private String productLink;
 
 	private String rebateLink;
 
-	@Column(name = "status")
+	@XmlElement
 	private String status = Status.INCOMPLETE;
 
 	private double rebateAmount;
@@ -163,6 +177,81 @@ public class Entry implements Serializable {
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the createDate
+	 */
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	/**
+	 * @param createDate
+	 *            the createDate to set
+	 */
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	/**
+	 * @return the mailedDate
+	 */
+	public Date getMailedDate() {
+		return mailedDate;
+	}
+
+	/**
+	 * @param mailedDate
+	 *            the mailedDate to set
+	 */
+	public void setMailedDate(Date mailedDate) {
+		this.mailedDate = mailedDate;
+	}
+
+	/**
+	 * @return the processingDate
+	 */
+	public Date getProcessingDate() {
+		return processingDate;
+	}
+
+	/**
+	 * @param processingDate
+	 *            the processingDate to set
+	 */
+	public void setProcessingDate(Date processingDate) {
+		this.processingDate = processingDate;
+	}
+
+	/**
+	 * @return the approvedDate
+	 */
+	public Date getApprovedDate() {
+		return approvedDate;
+	}
+
+	/**
+	 * @param approvedDate
+	 *            the approvedDate to set
+	 */
+	public void setApprovedDate(Date approvedDate) {
+		this.approvedDate = approvedDate;
+	}
+
+	/**
+	 * @return the receiveDate
+	 */
+	public Date getReceiveDate() {
+		return receiveDate;
+	}
+
+	/**
+	 * @param receiveDate
+	 *            the receiveDate to set
+	 */
+	public void setReceiveDate(Date receiveDate) {
+		this.receiveDate = receiveDate;
 	}
 
 	/**
@@ -300,35 +389,62 @@ public class Entry implements Serializable {
 	public String toString() {
 		return "Entry [id=" + id + ", user=" + user + ", name=" + name + ", description=" + description
 			+ ", startDate=" + startDate + ", endDate=" + endDate + ", productLink=" + productLink + ", rebateLink="
-			+ rebateLink + ", documents=" + documents + "]";
+			+ rebateLink + ", status=" + status + ", rebateAmount=" + rebateAmount + ", product=" + product
+			+ ", processor=" + processor + ", documents=" + documents + "]";
 	}
 
-	public void analyzeCompletness() {
-		if(Status.VOID.equals(status)){
+	public void changeStatus(String nextStatus) {
+		switch (status) {
+		case Status.VOID:
+			status = nextStatus;
 			return;
-		}
-		
-		status = Status.INCOMPLETE;
-		
-		if (null == name || name.length() < 1) {
-			return;
-		} else if (null == description || description.length() < 1) {
-			return;
-		} else if (null == rebateLink || rebateLink.length() < 1) {
-			return;
-		} else if (null == startDate || null == endDate) {
-			return;
-		} else if (null == processor) {
-			return;
-		} else if (null == product) {
-			return;
-		}
+		case Status.INCOMPLETE:
+			if (null == name || name.length() < 1) {
+				return;
+			} else if (null == description || description.length() < 1) {
+				return;
+			} else if (null == startDate || null == endDate) {
+				return;
+			}
 
-		processor.analyzeCompletness();
-		product.analyzeCompletness();
+			if (null != processor) {
+				processor.analyzeCompletness();
+			}
 
-		if (Status.VALID.equals(processor.getStatus()) && Status.VALID.equals(product.getStatus())) {
-			status = Status.VALID;
+			if (null != product) {
+				product.analyzeCompletness();
+			}
+
+			if (null != processor && null != product && Status.VALID.equals(processor.getStatus())
+				&& Status.VALID.equals(product.getStatus())) {
+				status = Status.VALID;
+			}
+			break;
+		case Status.VALID:
+			if (nextStatus.equals(Status.MAILED) || nextStatus.equals(Status.VOID)) {
+				status = nextStatus;
+			}
+			break;
+		case Status.MAILED:
+			if (nextStatus.equals(Status.PROCESSING) || nextStatus.equals(Status.VOID)) {
+				status = nextStatus;
+			}
+			break;
+		case Status.PROCESSING:
+			if (nextStatus.equals(Status.APPROVED) || nextStatus.equals(Status.VOID)) {
+				status = nextStatus;
+			}
+			break;
+		case Status.APPROVED:
+			if (nextStatus.equals(Status.RECEIVED)) {
+				status = nextStatus;
+			}
+			break;
+		case Status.RECEIVED:
+			status = nextStatus;
+			break;
+		default:
+			break;
 		}
 	}
 }

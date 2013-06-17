@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,7 +22,6 @@ import org.hibernate.annotations.ForeignKey;
 import org.springmodules.validation.bean.conf.loader.annotation.handler.NotBlank;
 
 import com.gullapu.savtrac.web.Constants.Status;
-
 /**
  * <p>
  * </p>
@@ -32,6 +32,9 @@ import com.gullapu.savtrac.web.Constants.Status;
 @Entity
 @Table(name = "Processors")
 public class Processor implements Serializable {
+
+	@Transient
+	private static final long serialVersionUID = -2225558458015988106L;
 
 	@Id
 	@Column(name = "processorID")
@@ -58,6 +61,7 @@ public class Processor implements Serializable {
 	@ForeignKey(name = "FK_PROCESSOR_TO_ADDRESS")
 	private Address address;
 
+	@XmlElement
 	private String status = Status.INCOMPLETE;
 
 	/**
@@ -168,9 +172,7 @@ public class Processor implements Serializable {
 	public void analyzeCompletness() {
 		if(Status.VOID.equals(status)){
 			return;
-		}
-		
-		status = Status.INCOMPLETE;
+		}		
 		
 		if (null == name || name.length() < 1) {
 			return;

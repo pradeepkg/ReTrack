@@ -11,11 +11,16 @@ package com.gullapu.savtrac.web;
  * @author Pradeep Kadambar
  */
 public interface Constants {
-	
+
 	public interface Status {
 		String VALID = "VALID";
 		String VOID = "VOID";
 		String INCOMPLETE = "INCOMPLETE";
+		String MAILED = "MAILED";
+		String PROCESSING = "PROCESSING";
+		String APPROVED = "APPROVED";
+		String RECEIVED = "RECEIVED";
+		String REJECTED = "REJECTED";
 	}
 
 	/**
@@ -32,11 +37,11 @@ public interface Constants {
 	 * The session key for user current user.
 	 */
 	String USER = "user";
-	
+
 	String DOCUMENTS = "documents";
-	
+
 	String ENTRY = "entry";
-	
+
 	String PRODUCT = "product";
 
 	/**
@@ -63,25 +68,33 @@ public interface Constants {
 	 * The redirect JSP for error handling.
 	 */
 	String JSP_ERROR = "/WEB-INF/jsps/error.jsp";
-	
+
 	String JSP_CREATE = "/WEB-INF/jsps/createForm.jsp";
-	
-	String JSP_CREATE_1 = "/WEB-INF/jsps/createForm_1.jsp";
-	
-	String JSP_CREATE_2 = "/WEB-INF/jsps/createForm_2.jsp";
-	
-	String JSP_CREATE_3 = "/WEB-INF/jsps/createForm_3.jsp";
-	
+
+	String JSP_CREATE_ENTRY = "/WEB-INF/jsps/createEntry.jsp";
+
+	String JSP_CREATE_PRODUCT = "/WEB-INF/jsps/createProduct.jsp";
+
+	String JSP_CREATE_PROCESSOR = "/WEB-INF/jsps/createProcessor.jsp";
+
 	String JSP_EDIT_ENTRY = "/WEB-INF/jsps/editEntry.jsp";
-	
+
 	String JSP_EDIT_PRODUCT = "/WEB-INF/jsps/editProduct.jsp";
-	
+
 	String JSP_EDIT_PROCESSOR = "/WEB-INF/jsps/editProcessor.jsp";
-	
+
 	String JSP_LIST = "/WEB-INF/jsps/getEntries.jsp";
 
 	String JSP_DOCS_LIST = "/WEB-INF/jsps/getDocs.jsp";
 	
+	String JSP_ENTRY_MAILED = "/WEB-INF/jsps/entryMailed.jsp";
+	
+	String JSP_ENTRY_PROCESSING = "/WEB-INF/jsps/entryProcessing.jsp";
+	
+	String JSP_ENTRY_APPROVED = "/WEB-INF/jsps/entryApproved.jsp";
+	
+	String JSP_ENTRY_RECEIVED = "/WEB-INF/jsps/entryReceived.jsp";
+
 	/**
 	 * The redirect JSP for successful results.
 	 */

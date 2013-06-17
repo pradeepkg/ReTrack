@@ -1,45 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="taglibs.jsp"%>
-<stripes:layout-render name="${layout}" title="Processor Information"
+<stripes:layout-render name="${layout}" title="Edit Processor Information"
 	objects="${pageContext.request.parameterMap}">
-	<stripes:layout-component name="html-head">
-		<script type="text/javascript" src="resources/PhoneFormat.js"></script>
-		<script src="resources/jsDatePick/jquery.1.4.2.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() {				
-			    $("#TripType").change(function() {
-			        var x = $(this).val();
-			        $('#processorID').val(x);			        
-			        $("#processor")[$(this).val() == "-1" ? 'show' : 'hide']("fast");
-
-			    }).change();
-			});
-		</script>
-	</stripes:layout-component>
 	<stripes:layout-component name="contents">
 		<stripes:form
-			beanclass="com.gullapu.savtrac.web.CreateActionBean"
+			beanclass="com.gullapu.savtrac.web.EditActionBean"
 			focus="entry.processor.select">
 			<stripes:hidden name="entryID" />			
 			<stripes:hidden name="processorID" id="processorID" />
-			<table border="1" cellspacing="0" align="center" width="100%">
-				<tr>
-					<td align="left" class="prmt">&nbsp;<stripes:label
-							name="entry.processor.select" /></td>
-					<td align="left">&nbsp;
-					<stripes:select name="processorID" id="TripType" class="text_field"  >
-						<c:forEach items="${actionBean.processors}" var="processor" varStatus="loop">
-							<stripes:option value="${processor.id}" >${processor.name}</stripes:option>
-						</c:forEach>
-						<stripes:option value="-1" >Add New</stripes:option>
-					</stripes:select>
-					</td>
-				</tr>	
-			</table>
 			
-			<table border="1" cellspacing="0" align="center" width="100%" id="processor" 
-				style="display: none;">
+			<table border="1" cellspacing="0" align="center" width="100%" id="processor" >
 				<tr>
 					<td align="left" class="prmt">&nbsp;<stripes:label
 							name="entry.processor.name" /></td>
@@ -120,7 +91,7 @@
 			<table border="1" cellspacing="0" align="center" width="100%">
 				<tr>
 					<td align="left" colspan="2">&nbsp;&nbsp;<stripes:submit
-							class="submit_btn" name="processForm_3" value="Finish" />
+							class="submit_btn" name="editProcessor" value="Finish" />
 					</td>
 				</tr>
 			</table>

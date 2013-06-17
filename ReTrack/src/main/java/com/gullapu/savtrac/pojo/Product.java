@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -42,6 +43,7 @@ public class Product implements Serializable {
 	@XmlElement
 	private double price;
 
+	@XmlElement
 	private String status = Status.INCOMPLETE;
 
 	/**
@@ -120,12 +122,10 @@ public class Product implements Serializable {
 	}
 
 	public void analyzeCompletness() {
-		if(Status.VOID.equals(status)){
+		if (Status.VOID.equals(status)) {
 			return;
 		}
-		
-		status = Status.INCOMPLETE;
-		
+
 		if (null != name && name.length() > 0) {
 			status = Status.VALID;
 		}

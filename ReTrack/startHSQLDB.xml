@@ -1,62 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." name="HSQLDB">
 
-	<property name="hsql.lib"           value="C:/Development/hsqldb-2.2.9/lib/hsqldb.jar"/>
-	<property name="sql.dir"             value="${basedir}/src/main/resources/sql" />
+	<property name="hsql.lib" value="C:/Users/kadamp/.m2/repository/org/hsqldb/hsqldb/2.2.9/hsqldb-2.2.9.jar" />
+	<property name="sql.dir" value="${basedir}/src/main/resources/sql" />
 
-	<property name="lib.dir"          value="${basedir}/lib"/>
+	<property name="lib.dir" value="${basedir}/lib" />
 
-	<property name="path.to.db"           value="${basedir}\DB"/>
-	<property name="db.name"          value="users"/>
-	<property name="user.id"          value="sa"/>
-	<property name="user.pwd"             value=""/>
-	<property name="db.file"             value="${path.to.db}\${db.name}"/>
+	<property name="path.to.db" value="${basedir}\DB" />
+	<property name="db.name" value="users" />
+	<property name="user.id" value="sa" />
+	<property name="user.pwd" value="" />
+	<property name="db.file" value="${path.to.db}\${db.name}" />
 
 	<target name="Start HSQL Database">
-		<echo message="Starting HSQLDB"/>
+		<echo message="Starting HSQLDB" />
 		<java fork="true" dir="." classname="org.hsqldb.Server">
 			<classpath>
-				<pathelement path="${hsql.lib}"/>
+				<pathelement path="${hsql.lib}" />
 			</classpath>
-			<arg value="-database.0"/>
-			<arg value="${path.to.db}/${db.name}"/>
-			<arg value="-dbname.0"/>
-			<arg value="${db.name}"/>
+			<arg value="-database.0" />
+			<arg value="${path.to.db}/${db.name}" />
+			<arg value="-dbname.0" />
+			<arg value="${db.name}" />
 		</java>
 	</target>
 
 	<target name="Stop HSQL Database">
-		<sql
-	    driver="org.hsqldb.jdbcDriver"
-	  	url="jdbc:hsqldb:hsql://localhost/${db.name}"
-		userid="${user.id}"
-		password="${user.pwd}"
-	    autocommit="true">
+		<sql driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost/${db.name}" userid="${user.id}" password="${user.pwd}" autocommit="true">
 			<classpath>
-				<pathelement path="${hsql.lib}"/>
+				<pathelement path="${hsql.lib}" />
 			</classpath>
 	  	SHUTDOWN</sql>
 	</target>
 
 	<target name="Setup HSQL Database">
-		<sql
-		driver="org.hsqldb.jdbcDriver"
-		url="jdbc:hsqldb:hsql://localhost/${db.name}"
-		userid="${user.id}"
-		password="${user.pwd}"
-		src="${sql.dir}/schema_user.sql"
-		print="yes">
+		<sql driver="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost/${db.name}" userid="${user.id}" password="${user.pwd}" src="${sql.dir}/schema_user.sql" print="yes">
 			<classpath>
-				<pathelement location="${hsql.lib}"/>
+				<pathelement location="${hsql.lib}" />
 			</classpath>
 		</sql>
 	</target>
 
 	<target name="Start Database Manager UI">
-		<echo message="Starting HSQLDB swing client"/>
+		<echo message="Starting HSQLDB swing client" />
 		<java fork="true" dir="." classname="org.hsqldb.util.DatabaseManagerSwing">
 			<classpath>
-				<pathelement path="${hsql.lib}"/>
+				<pathelement path="${hsql.lib}" />
 			</classpath>
 		</java>
 	</target>
